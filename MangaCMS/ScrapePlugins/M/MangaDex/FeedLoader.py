@@ -159,14 +159,16 @@ class FeedLoader(MangaCMS.ScrapePlugins.LoaderBase.LoaderBase):
 			dateStr = ultime.get_text(strip=True)
 
 			# No idea how this was happening.
-			dateStr = dateStr.replace("minago",  "minutes ago")
-			dateStr = dateStr.replace("minsago", "minutes ago")
-			dateStr = dateStr.replace("hrago",   "hours ago")
-			dateStr = dateStr.replace("hrsago",  "hours ago")
-			dateStr = dateStr.replace("dayago",  "days ago")
-			dateStr = dateStr.replace("daysago", "days ago")
-			dateStr = dateStr.replace("moago",   "months ago")
-			dateStr = dateStr.replace("mosago",  "months ago")
+			dateStr = dateStr.replace("minago",    "minutes ago")
+			dateStr = dateStr.replace("minsago",   "minutes ago")
+			dateStr = dateStr.replace("hrago",     "hours ago")
+			dateStr = dateStr.replace("hrsago",    "hours ago")
+			dateStr = dateStr.replace("dayago",    "days ago")
+			dateStr = dateStr.replace("daysago",   "days ago")
+			dateStr = dateStr.replace("moago",     "months ago")
+			dateStr = dateStr.replace("mosago",    "months ago")
+			dateStr = dateStr.replace("yearago",   "months ago")
+			dateStr = dateStr.replace("yearsago",  "months ago")
 
 			itemDate, status = parsedatetime.Calendar().parse(dateStr)
 			if status < 1:

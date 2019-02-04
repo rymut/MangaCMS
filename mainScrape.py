@@ -44,6 +44,7 @@ job_defaults = {
 jobstores = {
 
 	'transient_jobstore' : MemoryJobStore(),
+	"misfire_grace_time" : 60 * 60 * 2,
 	'main_jobstore'      : SQLAlchemyJobStore(url='postgresql://{username}:{password}@{address}:5432/{dbname}'.format(
 				username = settings.NEW_DATABASE_USER,
 				password = settings.NEW_DATABASE_PASS,

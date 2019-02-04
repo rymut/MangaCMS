@@ -302,6 +302,70 @@ class CleanerBase(MangaCMS.ScrapePlugins.MangaScraperBase.MangaScraperBase):
 					sess.rollback()
 
 
+	def findIfMigrated(self, filePath):
+		dirPath, fileName = os.path.split(filePath)
+
+		series = dirPath.split("/")[-1]
+		series = nt.getCanonicalMangaUpdatesName(series)
+		otherDir = nt.dirNameProxy[series]
+
+		if not otherDir["fqPath"]:
+			return False
+		if otherDir["fqPath"] == dirPath:
+			return False
+
+		newPath = os.path.join(otherDir["fqPath"], fileName)
+		if os.path.exists(newPath):
+			print("File moved!")
+			return otherDir["fqPath"]
+
+		return False
+
+	def resetMissingDownloads(self):
+
+
+		if not nt.dirNameProxy.observersActive():
+			nt.dirNameProxy.startDirObservers()
+
+
+		with self.db.session_context() as sess:
+			file_rows = sess.query(self.target_table) \
+				.order_by(desc(self.target_table.id)) \
+				.options(joinedload('file')) \
+				.all()
+
+			self.log.info("Ret %s", len(file_rows))
+
+			loops = 0
+			for row in tqdm.tqdm(file_rows):
+				if not row.file:
+					# self.log.info("No file: %s, %s, %s", row.state, row.source_site, row.source_id)
+					if row.state == 'error':
+						sess.delete(row)
+						sess.commit()
+					continue
+
+
+				filePath = os.path.join(row.file.dirpath, row.file.filename)
+
+				if not os.path.exists(filePath):
+					migPath = self.findIfMigrated(filePath)
+					if not migPath:
+						self.log.info("Resetting download for %s, source=%s", filePath, row.source_site)
+						row.state = 'new'
+
+					else:
+						self.log.info("Moved!")
+						self.log.info("		Old = '%s'" % filePath)
+						self.log.info("		New = '%s'" % migPath)
+						# self.updatePath(dbId, migPath, cur)
+
+				loops += 1
+				if loops % 1000 == 0:
+					self.log.info("Incremental Commit!")
+					sess.commit()
+
+
 	# # STFU, abstract base class
 	def go(self):
 		pass
@@ -310,6 +374,18 @@ class MCleaner(CleanerBase):
 	logger_path = "Main.Mc"
 	tableName  = "MangaItems"
 	is_manga   = True
+	is_hentai  = False
+	is_book    = False
+	plugin_name = "None"
+	plugin_key   = "None"
+	plugin_type = 'Utility'
+
+class BCleaner(CleanerBase):
+	logger_path = "Main.Mc"
+	tableName  = "MangaItems"
+	is_manga   = False
+	is_hentai  = False
+	is_book    = True
 	plugin_name = "None"
 	plugin_key   = "None"
 	plugin_type = 'Utility'
@@ -318,6 +394,8 @@ class MCleaner(CleanerBase):
 class HCleaner(CleanerBase):
 	logger_path = "Main.Hc"
 	is_manga   = False
+	is_hentai  = True
+	is_book    = False
 	plugin_name = "None"
 	plugin_key   = "None"
 	plugin_type = 'Utility'

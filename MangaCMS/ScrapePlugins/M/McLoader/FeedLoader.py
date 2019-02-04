@@ -126,7 +126,7 @@ class FeedLoader(MangaCMS.ScrapePlugins.LoaderBase.LoaderBase):
 			if not runStatus.run:
 				self.log.info( "Breaking due to exit flag being set")
 				break
-		self.log.info("Found %s total items", len(total))
+		self.log.info("Found %s total items", total)
 		return []
 
 

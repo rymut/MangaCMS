@@ -203,12 +203,15 @@ help_strings = [
 ##############################################################################################################################
 
 # Single arg (funcs take no arg):
-def reset_missing():
-	pc = utilities.cleanDb.PathCleaner()
+def reset_b_missing():
+	pc = utilities.cleanDb.BCleaner()
 	pc.resetMissingDownloads()
-def reset_missing_h():
-	hc = utilities.cleanDb.HCleaner()
-	hc.resetMissingDownloads()
+def reset_m_missing():
+	pc = utilities.cleanDb.MCleaner()
+	pc.resetMissingDownloads()
+def reset_h_missing():
+	pc = utilities.cleanDb.HCleaner()
+	pc.resetMissingDownloads()
 def clear_bad_dedup():
 	pc = utilities.cleanDb.PathCleaner()
 	pc.clearInvalidDedupTags()
@@ -435,8 +438,9 @@ single_arg_funcs = {
 	"clean_reset"             : utilities.dedupDir.resetDeduperScan,
 	"fix_swapped_paths"       : utilities.dedupDir.fixSwap,
 
-	"reset_missing"           : reset_missing,
-	"reset_missing_h"         : reset_missing_h,
+	"reset_b_missing"         : reset_b_missing,
+	"reset_m_missing"         : reset_m_missing,
+	"reset_h_missing"         : reset_h_missing,
 	"clear_bad_dedup"         : clear_bad_dedup,
 	"clear_bad_h_dedup"       : clear_bad_h_dedup,
 	"fix_batoto_urls"         : fix_batoto_urls,

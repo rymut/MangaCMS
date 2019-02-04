@@ -15,3 +15,16 @@ flask_sqlalchemy==2.3.2
 flask-debugtoolbar==0.10.1
 
 flask_caching==1.4.0 
+pyinotify
+python-Levenshtein
+ftfy
+paramiko
+statsd
+python-sql
+irc
+python-magic
+git+https://github.com/fake-name/UniversalArchiveInterface.git
+rpyc
+sqlalchemy-citext
+parsedatetime
+cython
